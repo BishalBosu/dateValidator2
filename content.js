@@ -1,32 +1,54 @@
 /********** */
+console.log("started the script")
 const data_array = []
 
 async function waitForElement(timeout) {
+	console.log("started waitForElement", "data_array: ", data_array)
+
 	const start = Date.now()
 
 	while (Date.now() - start < timeout) {
-		if ((window.location.href = "http://10.24.1.208/receive/selectProduct")) {
+		if (window.location.href == "http://10.24.1.208/receive/selectProduct") {
 			return 0
 		}
 		await new Promise((resolve) => setTimeout(resolve, 1000))
 		//console.log("mailstart")
-		main1()
+		test()
 	}
 
 	return null
 }
 
+function test() {
+	console.log("started test", "data_array: ", data_array)
+
+	if (window.location.href == "http://10.24.1.208/receive/selectProduct") {
+		main1()
+	}
+}
+
 //storing data
-function main1() {
+async function main1() {
+	console.log("started main1", "data_array: ", data_array)
+	let len = document.getElementsByTagName("tr").length
+
+	while(1){
+		if(len > 0){
+			break;
+		}
+		await new Promise((resolve) => setTimeout(resolve, 500))
+		len = document.getElementsByTagName("tr").length
+	}
 	
 
-	//button
-	var table_rows = document.getElementsByTagName("tr")
-	var len = table_rows.length
+	console.log("between-1 main1: ", " len: ", len)
 
-	for (var i = 0; i < len; i++) {
+	for (let i = 0; i < len; i++) {
+		console.log("between0 main1 for loop: ", " i: ", i)
+
 		let inner_array = []
 
+		console.log("between1 main1: ", " inner_array: ", inner_array)
 		// pushing shelf life
 		document
 			.getElementsByTagName("tr")
@@ -36,6 +58,8 @@ function main1() {
 					inner_array.push(shelf_life)
 				}
 			})
+
+		console.log("between2 main1: ", " inner_array: ", inner_array)
 		//pushing mrp
 		document
 			.getElementsByTagName("tr")
@@ -46,66 +70,64 @@ function main1() {
 				}
 			})
 
+		console.log("between3 main1: ", " inner_array: ", inner_array)
+
 		//pushing the inner_array
 		data_array.push(inner_array)
 
+		console.log("between4 main1: ", " data_array: ", data_array)
+
 		//adding event listners
-		let length = document
-			.getElementsByTagName("tr")
-			[i].childNodes[1].childNodes
+		let length =
+			document.getElementsByTagName("tr")[i].childNodes[1].childNodes.length
 
-			document
-			.getElementsByTagName("tr")
-			[i].childNodes[1].childNodes[length - 1].addEventListener("click", ()=>{
-				forwardWith(i);
-			})
-		
+		let manage_lot_button =
+			document.getElementsByTagName("tr")[i].childNodes[1].childNodes[
+				length - 1
+			]
+
+		console.log("between5 main1: ", " manage_lot_button: ", manage_lot_button)
+
+		manage_lot_button.addEventListener("click", (e) => {
+			forwardWith(i)
+		})
 	}
-
-	
 }
 
-function forwardWith(id){
+function forwardWith(id) {
+	console.log("started forwardWith", "id: ", id)
+
 	main(id)
-
 }
-
-
-
-
 
 function main(id) {
+	console.log("started main", "id: ", id)
+
 	alert("Button Disabled untill Correct Input")
-	document.body.addEventListener("mousemove", (e)=>{
-		main2(id);
+	document.body.addEventListener("mousemove", (e) => {
+		main2(id)
 	})
-	document.body.addEventListener("keyup", (e)=>{
-		main2(id);
+	document.body.addEventListener("keyup", (e) => {
+		main2(id)
 	})
 }
 
 function main2(id) {
-	//console.log("started main2")
+	console.log("started main2", "id: ", id)
 
 	//button
 	var submit_button = document.querySelector(
 		".mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.btn-danger"
 	)
 
-	
-
 	//shelf life MONTHS
 	var shelf_life_integer = data_array[id][0]
-	
 
+	var integer_price = data_array[id][1]
 
-	var integer_price = data_array[id][1];
-
-	
 	//start processing
-	submit_button.disabled = true;
+	submit_button.disabled = true
 	//alert("submit button disabled.!")
-
 
 	//starting date generation
 	let currentdate = new Date()
@@ -119,7 +141,7 @@ function main2(id) {
 	var integer_mrp_input = document.getElementById("mrp").value * 1
 
 	//entered date
-	var dateInput0 = document.getElementsByName("mfg_date")[0].value;
+	var dateInput0 = document.getElementsByName("mfg_date")[0].value
 
 	//parse to date
 	var arr = dateInput0.split("-")
