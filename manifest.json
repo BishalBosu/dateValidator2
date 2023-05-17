@@ -8,7 +8,7 @@
                 
             "matches": [
         
-                "<all_urls>"
+                "http://10.24.1.208/receive/*"
              ],
         
             

@@ -32,14 +32,13 @@ async function main1() {
 	console.log("started main1", "data_array: ", data_array)
 	let len = document.getElementsByTagName("tr").length
 
-	while(1){
-		if(len > 0){
-			break;
+	while (1) {
+		if (len > 0) {
+			break
 		}
 		await new Promise((resolve) => setTimeout(resolve, 500))
 		len = document.getElementsByTagName("tr").length
 	}
-	
 
 	console.log("between-1 main1: ", " len: ", len)
 
@@ -52,23 +51,23 @@ async function main1() {
 		// pushing shelf life
 		document
 			.getElementsByTagName("tr")
-			[i].childNodes[1].childNodes.forEach((element) => {
-				if (element.innerText.search("Max Shelf Life Value:") != -1) {
-					let shelf_life = element.innerText.replace(/[^0-9]/g, "") * 1
-					inner_array.push(shelf_life)
-				}
-			})
+		[i].childNodes[1].childNodes.forEach((element) => {
+			if (element.innerText.search("Max Shelf Life Value:") != -1) {
+				let shelf_life = element.innerText.replace(/[^0-9]/g, "") * 1
+				inner_array.push(shelf_life)
+			}
+		})
 
 		console.log("between2 main1: ", " inner_array: ", inner_array)
 		//pushing mrp
 		document
 			.getElementsByTagName("tr")
-			[i].childNodes[1].childNodes.forEach((element) => {
-				if (element.innerText.search("Mrp:") != -1) {
-					let mrp = element.innerText.replace(/[^0-9]/g, "") * 1
-					inner_array.push(mrp)
-				}
-			})
+		[i].childNodes[1].childNodes.forEach((element) => {
+			if (element.innerText.search("Mrp:") != -1) {
+				let mrp = element.innerText.replace(/[^0-9]/g, "") * 1
+				inner_array.push(mrp)
+			}
+		})
 
 		console.log("between3 main1: ", " inner_array: ", inner_array)
 
@@ -83,7 +82,7 @@ async function main1() {
 
 		let manage_lot_button =
 			document.getElementsByTagName("tr")[i].childNodes[1].childNodes[
-				length - 1
+			length - 1
 			]
 
 		console.log("between5 main1: ", " manage_lot_button: ", manage_lot_button)
@@ -94,16 +93,65 @@ async function main1() {
 	}
 }
 
-function forwardWith(id) {
-	console.log("started forwardWith", "id: ", id)
+async function forwardWith(id) {
 
-	main(id)
+	let button_group = document.querySelector(".mdl-grid")
+	console.log("started forwardWith", "id: ", id)
+	while (1) {
+		button_group = document.querySelector(".mdl-grid")
+		if (document.querySelector(".mdl-grid")) {
+			break
+		}
+		await new Promise((resolve) => setTimeout(resolve, 500))
+	}
+
+	console.log("found button group: ", button_group);
+
+
+	console.log("new promise stared");
+	// Create the outer div with class and id
+	var formGroupDiv = document.createElement("div")
+	formGroupDiv.className = "form-group"
+	formGroupDiv.id = "custom_mfg_date"/*  */
+
+	// Create the label element
+	var label = document.createElement("label")
+	label.style.textAlign="right"
+	label.className = "control-label col-sm-4"
+	label.textContent = "MFG_DATE"
+
+	// Create the inner div with class
+	var innerDiv = document.createElement("div")
+	innerDiv.className = "col-sm-8"
+
+	// Create the input element
+	var input = document.createElement("input")
+	input.type = "date"
+	input.className = "form-control"
+	input.id = "mfg_date1"
+
+	// Append the input element to the inner div
+	innerDiv.appendChild(input)
+
+	// Append the label and inner div to the outer div
+	formGroupDiv.appendChild(label)
+	formGroupDiv.appendChild(innerDiv)
+
+	document.querySelector(".form-horizontal").childNodes[3].style.display="none"
+	button_group.insertAdjacentElement("beforebegin", formGroupDiv)
+
+
+
+
+
+
+main(id)
 }
 
 function main(id) {
 	console.log("started main", "id: ", id)
 
-	alert("Button Disabled untill Correct Input")
+	//alert("Button Disabled untill Correct Input")
 	document.body.addEventListener("mousemove", (e) => {
 		main2(id)
 	})
@@ -141,8 +189,7 @@ function main2(id) {
 	var integer_mrp_input = document.getElementById("mrp").value * 1
 
 	//entered date
-	var dateInput0 = document.getElementsByName("mfg_date")[0].value
-
+	var dateInput0 = document.querySelector('[data-item_index="2"]').value
 	//parse to date
 	var arr = dateInput0.split("-")
 
@@ -159,6 +206,7 @@ function main2(id) {
 	//console.log(currentdate)
 	//console.log(integer_mrp_input)
 	//console.log(integer_price)
+	document.querySelector('[data-item_index="2"]').value = document.getElementById("mfg_date1").value;
 
 	if (
 		dateInput <= currentdate &&
@@ -167,8 +215,10 @@ function main2(id) {
 		integer_price * 1.3 >= integer_mrp_input
 	) {
 		submit_button.disabled = false
+
 	} else {
 		//console.log("submit button disabled. Untill correct date and mrp entered!");
+		
 		submit_button.disabled = true
 	}
 }
